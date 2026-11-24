@@ -49,7 +49,7 @@ const rangeDashboard = (() => {
         <h2>${enterpriseScenario.title}</h2><p>${enterpriseScenario.goal}</p>
         <p class="small muted">${enterprise.objectives().filter(check => check.passed).length}/4 целей · ${xp(state)} XP в профиле</p>
         ${btn(state.games[enterprise.game]?.score === 100 ? 'Открыть завершённую миссию' : state.enterprise ? 'Продолжить миссию' : 'Открыть брифинг', "go('enterprise')", 'primary')}
-        ${btn('Как пройти миссию', 'enterprise.openTutorial()')}
+        ${btn('Открыть туториал', 'enterprise.openTutorial()')}
       </section>
           <section class="card range-competencies" aria-labelledby="range-competencies">
             <h2 id="range-competencies">Карта компетенций</h2>

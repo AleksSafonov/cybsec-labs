@@ -7,8 +7,9 @@
 .survey-hotspot { position: absolute; display: grid; place-items: center; left: var(--x); top: var(--y); transform: translate(-50%, -50%); width: 44px; height: 44px; padding: 0; border-radius: 50%; border: 2px solid var(--accent); background: #101d1a; color: var(--accent); box-shadow: 0 0 0 3px #0a1418a0; }
 .survey-hotspot:hover, .survey-hotspot:focus-visible { background: #245045; }
 .survey-brief summary, .survey-layout summary { cursor: pointer; }
-.survey-guide { margin-bottom: 12px; }
+.survey-guide { margin-bottom: 12px; border-color: #52786a; background: #1b3029; }
 .survey-guide summary { cursor: pointer; }
+.survey-guide summary span { display: block; margin: 4px 0 0 17px; }
 .survey-guide li { padding: 4px 0 8px; }
 .survey-guide b { color: var(--text); }
 .survey-decision { margin: 0 0 12px; }

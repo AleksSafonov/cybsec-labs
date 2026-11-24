@@ -15,7 +15,7 @@ const enterprise = (() => {
 
   function tutorial() {
     return `<details class="card survey-guide" id="survey-tutorial" ${tutorialOpen ? 'open' : ''} ontoggle="enterprise.rememberTutorial(this.open)">
-      <summary><strong>Туториал · куда нажимать</strong></summary>
+      <summary><strong>Туториал · как пройти миссию</strong><span class="muted small">5 шагов от первого интервью до защиты</span></summary>
       <ol>
         <li><strong>Начни с переговорной.</strong> Под брифингом нажми <b>«Переговорная»</b>, затем точку на фотографии или кнопку <b>«Марина · владелец продаж»</b> под ней. В карточке нажми <b>«Какой процесс нельзя остановить?»</b>. Так же открой протокол встречи. Значок ✓ означает, что сведения добавлены в журнал.</li>
         <li><strong>Собери материалы во всех семи локациях.</strong> У каждого помещения по два объекта. Сначала исследуй <b>Отдел ИТ → Серверная → Отдел ИБ → Офис</b>, затем <b>Юридический отдел → Центр мониторинга</b>. Юрист отвечает после изучения реестра данных, аналитик — после осмотра витрины. Для витрины, базы, резервного хранилища и рабочего места после осмотра нажми <b>«Внести в опись»</b>.</li>
@@ -95,8 +95,8 @@ const enterprise = (() => {
     const count = checks.filter(check => check.passed).length;
     const status = state.games[game]?.score === 100;
     return header('Security Inspector · ' + config.operation, config.title, config.goal) + `
-      <div class="toolbar">${btn('← Кампания', "go('range')")}${btn('Как пройти миссию', 'enterprise.openTutorial()')}<a href="#survey-workbook" class="btn">Опись и риски</a>${btn('Схема · этап миссии', 'studio.openEnterprise()', 'primary')}<a href="#survey-defense" class="btn">Защита</a></div>
       ${tutorial()}
+      <div class="toolbar">${btn('← Кампания', "go('range')")}<a href="#survey-workbook" class="btn">Опись и риски</a>${btn('Схема · этап миссии', 'studio.openEnterprise()', 'primary')}<a href="#survey-defense" class="btn">Защита</a></div>
       <details class="card survey-brief" ${data.evidence.length ? '' : 'open'}><summary><strong>Брифинг · миссия 01</strong></summary>
         <p>Ты инженер ИБ на обследовании торговой сети. Заказчик ждёт схему текущей инфраструктуры, перечень неизвестных и предложения по проверкам.</p>
         <p>${config.constraint} Учебное время — 20–30 минут. Награда за первый зачёт — 30 XP.</p>
