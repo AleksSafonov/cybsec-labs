@@ -34,18 +34,27 @@ aside { padding: 30px 16px 20px; }
   background: #21322a;
   color: var(--accent);
 }
-.profilebar {
-  background: transparent;
+.page-profile { display: flex; justify-content: flex-end; margin-bottom: 22px; }
+.page-profile .profilebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 0;
+  padding: 8px 10px 8px 14px;
+  background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 10px;
 }
+.profile-summary { display: grid; gap: 2px; overflow-wrap: anywhere; }
+.page-profile .btn { padding: 7px 10px; font-size: 13px; }
 .sidebottom { margin-top: 18px; }
 .main {
   margin: 0 auto;
-  padding-top: clamp(28px, 5vw, 68px);
+  padding-top: clamp(16px, 2.5vw, 34px);
   max-width: 1320px;
 }
-.main > .eyebrow:empty, .main > h1 + p:empty { display: none; }
+#app > .eyebrow:empty, #app > h1 + p:empty { display: none; }
 h1 { font-size: clamp(32px, 4.5vw, 56px); letter-spacing: -.06em; margin-bottom: 24px; }
 h2 { letter-spacing: -.035em; }
 .eyebrow { font-size: 11px; letter-spacing: .13em; }
@@ -109,9 +118,7 @@ input[type=number], select, textarea, input[type=text] { background: #111717; bo
 @media (max-width: 760px) {
   aside { padding: 16px; }
   .nav { margin-top: 14px; padding: 3px; }
-  .profilebar { margin-top: 10px; display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 8px; }
-  .profilebar > .small { grid-column: 1; margin: 0; }
-  .profilebar > .btn { grid-column: 2; grid-row: 1 / span 3; font-size: 12px; }
+  .page-profile { margin-bottom: 15px; }
   .main { padding-top: 24px; }
   .hero-content { max-width: 100%; }
   .hero-art { opacity: .2; inset-inline-start: 54%; }

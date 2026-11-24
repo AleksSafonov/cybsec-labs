@@ -1,5 +1,6 @@
 .daily-heading { margin: 24px 0 10px; }
 .daily-heading h2 { margin: 0; }
+#daily-dashboard { margin-bottom: 20px; }
 .daily-card { padding: 0; overflow-wrap: anywhere; }
 .daily-card > summary { padding: 13px 16px; cursor: pointer; }
 .daily-card > summary span, .daily-card > summary strong { margin-left: 4px; }
