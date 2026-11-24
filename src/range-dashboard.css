@@ -1,0 +1,66 @@
+.range-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(14px, 2.5vw, 28px);
+  align-items: start;
+}
+.range-overview h2 { margin: 0 0 12px; font-size: 22px; }
+.range-overview .card { background: #17212c; border-color: #2b3945; }
+.range-tracks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.range-track {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  position: relative;
+  gap: 6px;
+  padding: 16px;
+  min-height: 124px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.range-track:hover { border-color: var(--accent); background: #1a2a33; }
+.range-track-icon { color: #81debd; font-size: 25px; line-height: 1; }
+.range-track:nth-child(3n + 2) .range-track-icon { color: #8ab9ff; }
+.range-track:nth-child(3n) .range-track-icon { color: #ceb0fc; }
+.range-track strong { font-size: 15px; }
+.range-track > .muted { font-size: 13px; }
+.range-track-arrow { position: absolute; inset: 12px 13px auto auto; color: var(--muted); }
+.range-insights { display: grid; gap: 12px; min-width: 0; }
+.range-recommendation { overflow: hidden; padding: 0; }
+.range-cover {
+  position: relative;
+  height: clamp(105px, 14vw, 175px);
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 45%, #3b6d9d 0%, #162744 34%, #0e1629 77%);
+}
+.range-cover::before, .range-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, #5485dd66 0 2px, transparent 2px 13%),
+    repeating-linear-gradient(0deg, #72b6ef55 0 1px, #142038 1px 9px);
+  clip-path: polygon(0 0, 100% 31%, 100% 69%, 0 100%);
+  width: 43%;
+  border-inline-end: 2px solid #8db9ff;
+}
+.range-cover::after { left: auto; right: 0; transform: scaleX(-1); }
+.range-recommendation-body { padding: 16px; }
+.range-recommendation h2 { margin: 3px 0 7px; }
+.range-competencies p { margin-bottom: 0; }
+.range-radar { display: block; width: 100%; max-height: 360px; }
+.range-radar-grid { fill: none; stroke: #52636c; stroke-width: 1; }
+.range-radar-data { fill: #65e0bc33; stroke: #81debd; stroke-width: 2; }
+.range-radar circle { fill: #81debd; }
+.range-radar text { fill: var(--text); font: 13px system-ui, sans-serif; }
+.range-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; margin: 0; }
+.range-metrics > div { min-width: 0; border-top: 1px solid var(--line); padding-top: 5px; }
+.range-metrics dt { color: var(--muted); font-size: 12px; }
+.range-metrics dd { margin: 0; font-weight: 650; font-size: 13px; }
+@media (max-width: 1080px) {
+  .range-overview { grid-template-columns: minmax(0, 1fr); }
+  .range-insights { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
+@media (max-width: 620px) {
+  .range-insights { grid-template-columns: minmax(0, 1fr); }
+  .range-track { padding: 12px; }
+}

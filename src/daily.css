@@ -1,0 +1,24 @@
+.daily-heading { margin: 24px 0 10px; }
+.daily-heading h2 { margin: 0; }
+.daily-card { padding: 0; overflow-wrap: anywhere; }
+.daily-card > summary { padding: 13px 16px; cursor: pointer; }
+.daily-card > summary span, .daily-card > summary strong { margin-left: 4px; }
+.daily-card > summary strong { display: block; margin-top: 3px; }
+.daily-card > summary > span:last-child { display: block; margin-top: 6px; color: var(--muted); }
+.daily-card > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; border-radius: 11px; }
+.daily-card[open] > summary { border-bottom: 1px solid var(--line); }
+.daily-body { padding: 4px 16px 14px; }
+.daily-body p:first-child { margin-top: 10px; }
+.daily-activities { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; align-items: start; }
+.daily-related { align-items: baseline; margin: 12px 0; }
+.daily-actions .btn { font-size: 13px; }
+.daily-actions .btn[aria-pressed="true"] { color: var(--accent); }
+.daily-actions .btn:disabled { opacity: .75; cursor: default; }
+.daily-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-bottom: 16px; }
+.daily-filters .field { margin: 0; min-width: 0; }
+.daily-filters > label:last-child { padding-block: 9px; cursor: pointer; }
+.daily-archive { display: grid; gap: 8px; }
+@media (max-width: 540px) {
+  .daily-activities { grid-template-columns: minmax(0, 1fr); }
+  .daily-filters .field { flex: 1 1 230px; }
+}

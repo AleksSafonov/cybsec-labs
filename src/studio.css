@@ -1,0 +1,32 @@
+#studio-workspace {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+}
+#studio-workspace:fullscreen { overflow: auto; border-radius: 0; }
+.studio-toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.studio-toolbar .btn, .studio-inspector .btn { padding: 6px 10px; font-size: 13px; }
+.studio-toolbar select { width: auto; max-width: 100%; padding: 6px 10px; }
+.studio-toolbar button:disabled { opacity: .45; cursor: default; }
+.studio-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(190px, 235px); gap: 12px; }
+.studio-board, .studio-inspector { min-width: 0; }
+.studio-canvas { border: 1px solid var(--line); border-radius: 8px; background: #101717; overflow: hidden; }
+.studio-canvas svg { width: 100%; height: clamp(330px, 59vh, 900px); display: block; touch-action: none; cursor: grab; user-select: none; }
+.studio-canvas svg:active { cursor: grabbing; }
+.studio-canvas [data-node] { cursor: move; }
+.studio-inspector { border-left: 1px solid var(--line); padding-left: 10px; }
+.studio-inspector h2 { margin: 0 0 10px; font-size: 18px; }
+.studio-inspector .field { margin-bottom: 8px; }
+.studio-inspector form { margin-bottom: 10px; }
+.studio-brief { border: 1px solid var(--line); padding: 10px 14px; border-radius: 8px; margin: 10px 0; }
+.studio-brief p { margin: 6px 0; }
+.studio-footer { display: flex; gap: 8px; justify-content: space-between; padding-top: 6px; color: var(--muted); font-size: 12px; }
+.studio-links { max-height: 220px; overflow: auto; }
+.studio-links input { margin: 4px 0; }
+.studio-minimap svg { width: 100%; max-height: 145px; display: block; }
+.studio-context { position: fixed; z-index: 10; display: grid; gap: 4px; padding: 4px; background: var(--panel); border: 1px solid var(--line); }
+@media (max-width: 1000px) {
+  .studio-layout { grid-template-columns: minmax(0, 1fr); }
+  .studio-inspector { border-left: 0; padding-left: 0; }
+}
