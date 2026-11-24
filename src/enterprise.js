@@ -60,19 +60,6 @@ const enterprise = (() => {
     return project;
   }
 
-  function sceneArt(index) {
-    const styles = [
-      '<path d="M94 191l214-53 92 56-217 54zM183 248v42m217-96v44M94 191v38"/><rect x="310" y="56" width="127" height="77" rx="4"/>',
-      '<path d="M73 232h355M93 233v48m303-48v48"/><rect x="112" y="105" width="119" height="90" rx="5"/><rect x="268" y="105" width="119" height="90" rx="5"/><path d="M172 196v32m155-32v32"/>',
-      '<rect x="84" y="57" width="130" height="226" rx="7"/><rect x="286" y="57" width="130" height="226" rx="7"/><path d="M99 100h100m-100 32h100m-100 32h100m-100 32h100m-100 32h100m102-128h100m-100 32h100m-100 32h100m-100 32h100m-100 32h100"/>',
-      '<rect x="65" y="73" width="166" height="97" rx="5"/><path d="M88 138l30-22 30 12 47-31M66 234h362"/><rect x="277" y="72" width="151" height="99" rx="5"/><path d="M298 101h90m-90 24h106m-106 24h77"/>',
-      '<path d="M38 175h424m-424 57h424m-391-55v81m126-81v81m105-81v81m126-81v81"/><rect x="90" y="118" width="88" height="53" rx="4"/><rect x="320" y="118" width="88" height="53" rx="4"/>',
-      '<rect x="60" y="53" width="126" height="176" rx="4"/><path d="M73 89h100M73 129h100m-100 40h100m-100 40h100M219 185h218m-196 0v80m174-80v80"/><rect x="269" y="143" width="105" height="36" rx="4"/>',
-      '<rect x="63" y="64" width="374" height="120" rx="5"/><path d="M185 65v117m130-117v117M79 145l20-16 17 9 32-38m53 46h96m33-28h86m-88 30h60M85 226h330"/>'
-    ];
-    return `<svg viewBox="0 0 500 300" preserveAspectRatio="none" aria-hidden="true"><path class="survey-floor" d="M0 231l250-65 250 65v69H0z"/><g class="survey-furniture">${styles[index]}</g></svg>`;
-  }
-
   function view() {
     const data = progress();
     const scene = config.scenes[data.scene];
@@ -92,7 +79,7 @@ const enterprise = (() => {
           <div class="toolbar survey-map">${config.scenes.map((place, index) =>
             `<button class="btn ${index === data.scene ? 'primary' : ''}" aria-pressed="${index === data.scene}" onclick="enterprise.visit(${index})">${place.name} · ${place.items.filter(item => data.evidence.includes(item.id)).length}/${place.items.length}</button>`).join('')}</div>
           <h2>${scene.name}</h2><p class="muted">${scene.intro}</p>
-          <div class="survey-scene">${sceneArt(data.scene)}${scene.items.map(item =>
+          <div class="survey-scene"><img src="content/inspector-scenes/${scene.image}.jpg" alt="" width="1619" height="971" decoding="async">${scene.items.map(item =>
             `<button class="survey-hotspot" style="--x:${item.x}%;--y:${item.y}%" aria-label="${esc(item.name)}" onclick="enterprise.inspect('${item.id}')">${data.evidence.includes(item.id) ? '✓' : item.icon}</button>`).join('')}</div>
           <div class="toolbar">${scene.items.map(item => btn(item.name, `enterprise.inspect('${item.id}')`)).join('')}</div>
           ${active ? `<div class="card" id="survey-object"><h3>${active.name}</h3>
