@@ -1,6 +1,7 @@
 const studio = (() => {
   const key = KEY + ':architecture-studio-v1';
   let enterpriseMode = false;
+  let logisticsMode = false;
   let sandboxDraft;
   const undo = [], redo = [], selected = new Set();
   const home = { x: 0, y: 0, w: 1040, h: 640 };
@@ -22,6 +23,12 @@ const studio = (() => {
   const attr = box => [box.x, box.y, box.w, box.h].join(' ');
 
   function persist() {
+    if (logisticsMode) {
+      state.logisticsDraft = structuredClone(project);
+      save();
+      storageMessage = storageOK ? 'Черновик миссии сохранён' : 'Черновик не записан. Скачай JSON.';
+      return;
+    }
     if (enterpriseMode) {
       state.enterpriseDraft = structuredClone(project);
       save();
@@ -41,6 +48,7 @@ const studio = (() => {
     try {
       edit();
       if (enterpriseMode) project.mission = '';
+      if (logisticsMode) project.mission = 'logistics';
       project = studioParse(project);
     } catch (error) {
       project = previous;
@@ -111,8 +119,9 @@ const studio = (() => {
   }
 
   function viewHTML() {
-    return header(enterpriseMode ? 'Security Inspector · исходная схема' : 'Engineering Sandbox', 'Architecture Studio', 'Редактор схем и проверка инженерных решений') +
+    return header(enterpriseMode ? 'Security Inspector · исходная схема' : logisticsMode ? 'Cyber Range · Architecture Studio' : 'Engineering Sandbox', logisticsMode ? studioMissions.logistics.title : 'Architecture Studio', 'Редактор схем и проверка инженерных решений') +
       (enterpriseMode ? '<div class="toolbar">' + btn('← К обследованию', "go('enterprise')") + '</div>' : '') +
+      (logisticsMode ? '<div class="toolbar">' + btn('← К миссиям', "go('range')") + '</div>' : '') +
       '<section id="studio-workspace" aria-label="Рабочее пространство редактора"></section>';
   }
 
@@ -124,13 +133,15 @@ const studio = (() => {
       ${enterpriseMode ? `<details class="studio-brief" open><summary>Цель миссии</summary><p>${enterpriseScenario.goal}</p>
         <ul>${enterprise.objectives(project).map(check => `<li>${check.passed ? '✓' : '○'} ${check.label}</li>`).join('')}</ul></details>` : ''}
       <div class="studio-toolbar">
-        ${enterpriseMode ? '<strong>Исходная схема заказчика</strong>' : `<select data-select="mission" aria-label="Режим проекта"><option value="">Свободное проектирование</option>${Object.entries(studioMissions).map(([key, m]) => `<option value="${key}" ${key === project.mission ? 'selected' : ''}>${m.title}</option>`).join('')}</select>`}
+        ${enterpriseMode || logisticsMode ? '<strong>Черновик миссии</strong>' : `<select data-select="mission" aria-label="Режим проекта"><option value="">Свободное проектирование</option><option value="shop" ${project.mission === 'shop' ? 'selected' : ''}>Интернет-магазин</option></select>`}
         ${button('Отменить', 'undo', !undo.length)}${button('Повторить', 'redo', !redo.length)}
         ${button('Удалить', 'delete', !selected.size && !zone())}${button('На весь экран', 'fullscreen')}
         ${button('Новый проект', 'new')}${button('JSON', 'json')}${button('SVG', 'svg')}${button('PNG', 'png')}${button('Импорт', 'import')}
         <input type="file" accept=".json,application/json" id="studio-file" hidden>
       </div>
-      ${mission ? `<div class="studio-brief"><strong>Задание</strong><p>${mission.brief}</p>${button('Проверить проект', 'check')}
+      ${mission ? `<div class="studio-brief"><strong>Задание</strong><p>${mission.brief}</p>
+        ${logisticsMode ? '<details><summary>Как начать и что проверяется</summary><p>Выбери компонент в списке и нажми «+ Устройство». Добавь зоны кнопкой «+ Зона» и перетащи их за край или свободную область. Нажми «Связь», выбери тип потока, затем нажми источник и получателя.</p><ul>' + mission.rules.map(rule => '<li>' + rule.title + '</li>').join('') + '</ul></details>' : ''}
+        ${button('Проверить проект', 'check')}
         ${report ? `<p role="status"><strong>${report.score}% · ${report.passed ? 'Зачтено' : 'Нужна доработка'}</strong></p><ul>${report.checks.map(c => `<li>${c.passed ? '✓' : c.critical ? 'Критично' : 'Доработать'} · ${c.title}${c.passed ? '' : ' — ' + c.hint}</li>`).join('')}</ul>` : ''}</div>` : ''}
       <div class="studio-layout">
         <div class="studio-board">
@@ -413,17 +424,20 @@ const studio = (() => {
 
   function switchProject(next, mode) {
     project = next;
-    enterpriseMode = mode;
+    enterpriseMode = mode === 'enterprise';
+    logisticsMode = mode === 'logistics';
     selected.clear();
     selectionZone = source = '';
     undo.length = redo.length = 0;
     report = drag = undefined;
+    pan = linkMode = false;
+    linkType = 'traffic';
     view = bounds();
   }
 
   function openSandbox() {
-    if (enterpriseMode) {
-      switchProject(sandboxDraft, false);
+    if (enterpriseMode || logisticsMode) {
+      switchProject(sandboxDraft, 'sandbox');
       storageMessage = 'Сохраняется в браузере';
     }
     go('studio');
@@ -433,13 +447,25 @@ const studio = (() => {
     const next = enterprise.seed(state.enterpriseDraft);
     next.mission = '';
     if (!enterpriseMode) {
-      sandboxDraft = project;
-      switchProject(next, true);
+      if (!logisticsMode) sandboxDraft = project;
+      switchProject(next, 'enterprise');
     }
     else project = next;
     persist();
     go('studio');
   }
 
-  return { viewHTML, draw, bind, openMission, openSandbox, openEnterprise, isEnterprise: () => enterpriseMode };
+  function openLogistics() {
+    if (!logisticsMode) {
+      let next = studioEmpty();
+      try { next = studioParse(state.logisticsDraft); } catch { /* Первый запуск или повреждённый черновик. */ }
+      next.mission = 'logistics';
+      if (!enterpriseMode) sandboxDraft = project;
+      switchProject(next, 'logistics');
+    }
+    go('studio');
+  }
+
+  return { viewHTML, draw, bind, openMission, openSandbox, openEnterprise, openLogistics,
+    isEnterprise: () => enterpriseMode || logisticsMode };
 })();

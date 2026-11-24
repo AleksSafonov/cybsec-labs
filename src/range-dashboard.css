@@ -5,6 +5,14 @@
   align-items: start;
 }
 .range-overview h2 { margin: 0 0 12px; font-size: 22px; }
+.range-mission-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.range-overview .range-mission { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.range-mission img { display: block; width: 100%; height: auto; }
+.range-mission-body { padding: 14px; flex: 1; display: flex; flex-direction: column; align-items: flex-start; }
+.range-mission-body h3 { margin: 4px 0 2px; }
+.range-mission-body .btn { margin-top: auto; }
+.sizing-form { margin-top: 14px; }
+.sizing-form li { margin-bottom: 8px; }
 .range-overview .card { background: #17212c; border-color: #2b3945; }
 .range-tracks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .range-track {
@@ -61,6 +69,7 @@
   .range-insights { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
 }
 @media (max-width: 620px) {
+  .range-mission-grid { grid-template-columns: minmax(0, 1fr); }
   .range-insights { grid-template-columns: minmax(0, 1fr); }
   .range-track { padding: 12px; }
 }

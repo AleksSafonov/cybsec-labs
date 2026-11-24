@@ -43,14 +43,27 @@ const rangeDashboard = (() => {
 
   function overview() {
     const metrics = competencies(state.attempts);
+    const missions = [
+      ['architecture', '◇', 'Architecture Studio', studioMissions.logistics.title, 'Начни с пустого холста. Создай зоны, нарисуй потоки и проверь, что защита работает по условиям заказчика.', 'range-studio-logistics', state.logisticsDraft, 'studio.openLogistics()'],
+      ['sizing', '▥', 'SIEM Engineer', sizingMission.title, 'Посчитай EPS и объём хранения. Подбери коллекторы и диски так, чтобы пережить отказ и уложиться в бюджет.', sizingMission.game, state.siemSizing, "go('sizing')"]
+    ];
     return header('Инженерный полигон', 'Cyber Range', 'Сюжетные миссии, доказательства и инженерные решения.') +
-      `<div class="range-overview"><section class="card survey-campaign">
+      `<div class="range-overview"><div><section class="card survey-campaign">
         <div class="eyebrow">Security Inspector · ${enterpriseScenario.operation}</div>
         <h2>${enterpriseScenario.title}</h2><p>${enterpriseScenario.goal}</p>
         <p class="small muted">${enterprise.objectives().filter(check => check.passed).length}/4 целей · ${xp(state)} XP в профиле</p>
         ${btn(state.games[enterprise.game]?.score === 100 ? 'Открыть завершённую миссию' : state.enterprise ? 'Продолжить миссию' : 'Открыть брифинг', "go('enterprise')", 'primary')}
         ${btn('Открыть туториал', 'enterprise.openTutorial()')}
       </section>
+      <section aria-labelledby="range-missions"><h2 id="range-missions">Инженерные миссии</h2>
+        <div class="range-mission-grid">${missions.map(([image, icon, track, title, brief, key, draft, action]) => {
+          const passed = state.games[key]?.score === 100;
+          return `<article class="card range-mission"><img src="content/range-missions/${image}.jpg" width="1619" height="971" alt="">
+            <div class="range-mission-body"><div class="eyebrow"><span aria-hidden="true">${icon} </span>${track}</div>
+            <h3>${title}</h3><p class="muted">${brief}</p>${passed ? '<p class="small ok">✓ Зачтено</p>' : ''}
+            ${btn(passed ? 'Открыть решение' : draft ? 'Продолжить миссию' : 'Начать миссию', action, 'primary')}</div></article>`;
+        }).join('')}</div>
+      </section></div>
           <section class="card range-competencies" aria-labelledby="range-competencies">
             <h2 id="range-competencies">Карта компетенций</h2>
             <p class="muted small">Среднее лучших оценок по тестам с попытками. Темы без попыток показаны отдельно.</p>

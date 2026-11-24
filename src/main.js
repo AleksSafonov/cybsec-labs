@@ -9,6 +9,7 @@ for (const id of ['games', 'pro']) pages.splice(pages.findIndex(([pageId]) => pa
 pages.find(([id]) => id === 'practice')[1] = '⌘  Тренировки';
 for (const [id, mission] of Object.entries(studioMissions)) gameNames['range-studio-' + id] = 'Architecture Studio · ' + mission.title;
 gameNames[enterprise.game] = enterpriseScenario.title;
+gameNames[sizingMission.game] = sizingMission.title;
 gameNames['enterprise-first-day'] = enterpriseScenario.title + ' · исходный сценарий';
 studio.bind();
 if (!glossary.some(([term]) => term === 'IAM')) {
