@@ -2,7 +2,34 @@ const enterprise = (() => {
   const config = enterpriseScenario;
   const game = 'security-inspector';
   const items = config.scenes.flatMap(scene => scene.items);
-  let selected = '', showReport = false;
+  let selected = '', showReport = false, tutorialOpen = false;
+
+  function openTutorial() {
+    tutorialOpen = true;
+    if (page !== 'enterprise') go('enterprise');
+    const guide = $('survey-tutorial');
+    guide.open = true;
+    guide.scrollIntoView?.({ block: 'start' });
+    guide.querySelector?.('summary')?.focus();
+  }
+
+  function tutorial() {
+    return `<details class="card survey-guide" id="survey-tutorial" ${tutorialOpen ? 'open' : ''} ontoggle="enterprise.rememberTutorial(this.open)">
+      <summary><strong>Туториал · куда нажимать</strong></summary>
+      <ol>
+        <li><strong>Начни с переговорной.</strong> Под брифингом нажми <b>«Переговорная»</b>, затем точку на фотографии или кнопку <b>«Марина · владелец продаж»</b> под ней. В карточке нажми <b>«Какой процесс нельзя остановить?»</b>. Так же открой протокол встречи. Значок ✓ означает, что сведения добавлены в журнал.</li>
+        <li><strong>Собери материалы во всех семи локациях.</strong> У каждого помещения по два объекта. Сначала исследуй <b>Отдел ИТ → Серверная → Отдел ИБ → Офис</b>, затем <b>Юридический отдел → Центр мониторинга</b>. Юрист отвечает после изучения реестра данных, аналитик — после осмотра витрины. Для витрины, базы, резервного хранилища и рабочего места после осмотра нажми <b>«Внести в опись»</b>.</li>
+        <li><strong>Заполни рабочую книгу.</strong> Нажми <b>«Опись и риски»</b>. Проверь, что в описи <b>4/4</b>, нажми <b>«Сопоставить схему, интервью и осмотр»</b>. Выбери предварительную границу обследования. В каждом из трёх рисков выбери актив и следующий шаг, затем отдельно нажми <b>«Сохранить риск»</b>.</li>
+        <li><strong>Покажи поток на схеме.</strong> Нажми <b>«Схема · этап миссии» → «Связь»</b>. Оставь тип <b>«Рабочий трафик»</b>. Нажми сначала <b>веб-витрину</b>, затем <b>базу заказов</b>. Должна появиться стрелка к базе. Ошибочную связь можно отменить кнопкой <b>«Отменить»</b>. Нажми <b>«← К обследованию»</b>.</li>
+        <li><strong>Сдай отчёт.</strong> Нажми <b>«Защита» → «Защитить результаты»</b>. При <b>4/4</b> целей миссия зачтена. Если что-то пропущено, итоговый разбор подскажет, что исправить. Черновик сохраняется автоматически.</li>
+      </ol>
+      <details><summary>Подсказка по описи и рискам</summary>
+        <p>Базу заказов добавь из карточки администратора в Отделе ИТ. Витрину и резервное хранилище добавь из Серверной, рабочее место — из Офиса.</p>
+        <p>Для копий свяжи резервное хранилище с испытанием восстановления. Для мониторинга свяжи базу заказов с проверкой контрольного события. Для сегментации свяжи базу заказов со сверкой фактических зон и правил доступа.</p>
+      </details>
+      <div class="toolbar"><a class="btn primary" href="#survey-locations">К локациям ↓</a><a class="btn" href="#survey-workbook">К рабочей книге ↓</a></div>
+    </details>`;
+  }
 
   function progress() {
     const saved = state.enterprise;
@@ -68,14 +95,15 @@ const enterprise = (() => {
     const count = checks.filter(check => check.passed).length;
     const status = state.games[game]?.score === 100;
     return header('Security Inspector · ' + config.operation, config.title, config.goal) + `
-      <div class="toolbar">${btn('← Кампания', "go('range')")}<a href="#survey-workbook" class="btn">Опись и риски</a>${btn('Схема · этап миссии', 'studio.openEnterprise()', 'primary')}<a href="#survey-defense" class="btn">Защита</a></div>
+      <div class="toolbar">${btn('← Кампания', "go('range')")}${btn('Как пройти миссию', 'enterprise.openTutorial()')}<a href="#survey-workbook" class="btn">Опись и риски</a>${btn('Схема · этап миссии', 'studio.openEnterprise()', 'primary')}<a href="#survey-defense" class="btn">Защита</a></div>
+      ${tutorial()}
       <details class="card survey-brief" ${data.evidence.length ? '' : 'open'}><summary><strong>Брифинг · миссия 01</strong></summary>
         <p>Ты инженер ИБ на обследовании торговой сети. Заказчик ждёт схему текущей инфраструктуры, перечень неизвестных и предложения по проверкам.</p>
         <p>${config.constraint} Учебное время — 20–30 минут. Награда за первый зачёт — 30 XP.</p>
         ${btn('Подготовка · модель угроз', 'openLesson(11)')}
       </details>
       <div class="survey-layout">
-        <section aria-label="Интерактивная карта организации">
+        <section id="survey-locations" aria-label="Интерактивная карта организации">
           <div class="toolbar survey-map">${config.scenes.map((place, index) =>
             `<button class="btn ${index === data.scene ? 'primary' : ''}" aria-pressed="${index === data.scene}" onclick="enterprise.visit(${index})">${place.name} · ${place.items.filter(item => data.evidence.includes(item.id)).length}/${place.items.length}</button>`).join('')}</div>
           <h2>${scene.name}</h2><p class="muted">${scene.intro}</p>
@@ -201,5 +229,6 @@ const enterprise = (() => {
       architecture: state.enterpriseDraft ?? null }, 'security-inspector-report.json');
   }
 
-  return { view, seed, visit, inspect, collect, register, scope, reconcile, note, logRisk, submit, exportReport, objectives, game };
+  return { view, seed, visit, inspect, collect, register, scope, reconcile, note, logRisk, submit, exportReport, objectives, game,
+    openTutorial, rememberTutorial: open => { tutorialOpen = open; } };
 })();
